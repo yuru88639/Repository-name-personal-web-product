@@ -1,76 +1,75 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { ArchivePanel } from "@/components/archive-panel";
+import { EssayBrowser, type Essay } from "@/components/essay-browser";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-type EssayDetail = {
+type GalleryItem = {
+  id: string;
   title: string;
-  excerpt: string | null;
-  content: string | null;
-  category: string;
-  language: string;
-  cover_url: string | null;
-  published_at: string | null;
+  subtitle: string | null;
+  quote: string | null;
+  image_url: string | null;
+  target_url: string | null;
 };
 
-type EssayPageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
-
-export default async function EssayPage({ params }: EssayPageProps) {
-  const { slug } = await params;
+async function getHomeData() {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("essays")
-    .select("title,excerpt,content,category,language,cover_url,published_at")
-    .eq("slug", slug)
-    .eq("is_published", true)
-    .single();
 
-  if (error || !data) {
-    notFound();
+  const [essaysResult, galleryResult] = await Promise.all([
+    supabase
+      .from("essays")
+      .select("id,title,slug,excerpt,category,language,cover_url,published_at")
+      .eq("is_published", true)
+      .order("published_at", { ascending: false })
+      .limit(9),
+    supabase
+      .from("gallery_items")
+      .select("id,title,subtitle,quote,image_url,target_url")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .limit(8),
+  ]);
+
+  if (essaysResult.error) {
+    console.error("Failed to load essays:", essaysResult.error.message);
   }
 
-  const essay = data as EssayDetail;
-  const paragraphs = (essay.content || essay.excerpt || "")
-    .split(/\n+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
+  if (galleryResult.error) {
+    console.error("Failed to load gallery items:", galleryResult.error.message);
+  }
+
+  return {
+    essays: (essaysResult.data ?? []) as Essay[],
+    galleryItems: (galleryResult.data ?? []) as GalleryItem[],
+  };
+}
+
+export default async function HomePage() {
+  const { essays, galleryItems } = await getHomeData();
 
   return (
-    <main className="min-h-screen bg-canvas px-6 py-10 text-ink">
-      <article className="mx-auto max-w-3xl">
-        <Link className="mb-10 inline-block text-sm text-muted" href="/">
-          ← Back to archive
-        </Link>
+    <main className="min-h-screen bg-canvas text-ink">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-8 lg:grid-cols-[220px_1fr] lg:px-10">
+        <aside className="border-line lg:min-h-[calc(100vh-4rem)] lg:border-r lg:pr-8">
+          <p className="mb-8 text-xs uppercase tracking-[0.22em] text-muted">Collections</p>
+          <nav className="grid gap-4 text-sm text-neutral-700">
+            <a href="#">The Minimalist</a>
+            <a href="#">Bauhaus Archive</a>
+            <a href="#">Design Anthology</a>
+            <a href="#">Resume</a>
+            <a className="rounded-card bg-ink px-4 py-3 text-center text-white" href="/admin">Upload</a>
+          </nav>
+        </aside>
 
-        <header className="mb-10 border-b border-line pb-8">
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-amber-800">{essay.category}</p>
-          <h1 className="text-4xl font-normal leading-tight md:text-6xl">{essay.title}</h1>
-          <p className="mt-5 text-sm text-muted">
-            {essay.published_at ?? "No date"} / {essay.language}
-          </p>
-          {essay.excerpt ? <p className="mt-6 text-xl leading-8 text-neutral-600">{essay.excerpt}</p> : null}
-        </header>
+        <div>
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_420px]">
+            <EssayBrowser essays={essays} />
 
-        {essay.cover_url ? (
-          <div
-            className="mb-10 aspect-[16/10] rounded-card bg-cover bg-center shadow-soft"
-            style={{ backgroundImage: `url(${essay.cover_url})` }}
-          />
-        ) : null}
-
-        <div className="grid gap-6 text-lg leading-9 text-neutral-800">
-          {paragraphs.length > 0 ? (
-            paragraphs.map((paragraph, index) => <p key={`${paragraph}-${index}`}>{paragraph}</p>)
-          ) : (
-            <p>这篇文章还没有正文内容。</p>
-          )}
+            <ArchivePanel captures={galleryItems} />
+          </div>
         </div>
-      </article>
+      </div>
     </main>
   );
 }
