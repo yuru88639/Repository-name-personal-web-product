@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export type Capture = {
   id: string;
@@ -11,8 +12,17 @@ export type Capture = {
   target_url: string | null;
 };
 
+type RecentLink = {
+  id: string;
+  title: string;
+  slug: string;
+  published_at: string | null;
+  category: string;
+};
+
 type ArchivePanelProps = {
   captures: Capture[];
+  recentLinks: RecentLink[];
 };
 
 const fallbackCaptures: Capture[] = [
@@ -26,7 +36,7 @@ const fallbackCaptures: Capture[] = [
   },
 ];
 
-export function ArchivePanel({ captures }: ArchivePanelProps) {
+export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
   const items = captures.length > 0 ? captures : fallbackCaptures;
   const [active, setActive] = useState(0);
   const capture = items[active] ?? items[0];
@@ -47,18 +57,16 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
       };
 
   return (
-    <aside className="relative">
-      <div className="absolute inset-x-5 top-6 h-full rotate-2 rounded-card bg-white shadow-soft" />
-      <div className="absolute inset-x-3 top-3 h-full -rotate-2 rounded-card bg-white shadow-soft" />
-      <section className="relative overflow-hidden rounded-card bg-white shadow-soft">
+    <aside className="grid gap-5">
+      <section className="relative overflow-hidden rounded-card bg-paper shadow-soft">
         <div className="flex items-center justify-between p-7">
           <h2 className="text-3xl font-normal">Visual Diary</h2>
           <div className="flex gap-3">
-            <button className="grid size-12 place-items-center rounded-2xl border border-line" onClick={showPrevious}>
+            <button className="grid size-11 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showPrevious}>
               <span aria-hidden>‹</span>
               <span className="sr-only">Previous capture</span>
             </button>
-            <button className="grid size-12 place-items-center rounded-2xl border border-line" onClick={showNext}>
+            <button className="grid size-11 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showNext}>
               <span aria-hidden>›</span>
               <span className="sr-only">Next capture</span>
             </button>
@@ -66,18 +74,22 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
         </div>
 
         <a
-          className="flex min-h-[420px] items-end bg-cover bg-center p-9 text-white"
+          className="flex min-h-[390px] items-end bg-cover bg-center p-8 text-white"
           href={capture.target_url ?? "#"}
           style={imageStyle}
         >
           <div>
-            <p className="mb-4 text-xs uppercase tracking-[0.36em]">Vol. II / Capture #{142 + active}</p>
-            <h3 className="mb-3 max-w-64 text-3xl font-normal leading-tight">{capture.title}</h3>
-            <p className="text-sm text-white/75">{capture.subtitle}</p>
+            <h3 className="mb-3 max-w-72 text-3xl font-normal leading-tight">{capture.title}</h3>
+            <p className="text-sm text-white/80">{capture.subtitle ?? "Location pending"}</p>
+            {capture.target_url ? (
+              <span className="mt-4 inline-block rounded-full border border-white/35 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85">
+                Open map
+              </span>
+            ) : null}
           </div>
         </a>
 
-        <div className="flex min-h-24 items-center justify-between gap-5 px-9 py-6">
+        <div className="flex min-h-20 items-center justify-between gap-5 px-8 py-5">
           <p className="italic text-neutral-700">&quot;{capture.quote}&quot;</p>
           <div className="flex gap-2">
             {items.map((item, index) => (
@@ -90,6 +102,30 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
               </button>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="rounded-card bg-paper p-6 shadow-soft">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <h2 className="text-xl font-normal">Recent Link</h2>
+          <span className="text-xs uppercase tracking-[0.2em] text-muted">Latest</span>
+        </div>
+        <div className="grid gap-4">
+          {recentLinks.length === 0 ? (
+            <p className="text-sm leading-6 text-muted">No published links yet.</p>
+          ) : (
+            recentLinks.map((item) => (
+              <Link
+                className="border-t border-line pt-4 transition first:border-t-0 first:pt-0 hover:text-clay"
+                href={`/essays/${item.slug}`}
+                key={item.id}
+              >
+                <p className="mb-1 text-xs uppercase tracking-[0.18em] text-clay">{item.category}</p>
+                <h3 className="line-clamp-2 text-sm font-normal leading-5">{item.title}</h3>
+                <p className="mt-2 text-xs text-muted">{item.published_at ?? "No date"}</p>
+              </Link>
+            ))
+          )}
         </div>
       </section>
     </aside>
