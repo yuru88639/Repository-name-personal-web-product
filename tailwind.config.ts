@@ -9,13 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#f5f6f7",
+        canvas: "#f4efe7",
         ink: "#151515",
-        muted: "#777b80",
-        line: "#e7e8ea",
+        muted: "#83786e",
+        line: "#e4d8ca",
+        paper: "#fffaf2",
+        clay: "#9a5735",
       },
       boxShadow: {
-        soft: "0 18px 45px rgba(16, 24, 40, 0.07)",
+        soft: "0 18px 45px rgba(77, 48, 30, 0.08)",
       },
       borderRadius: {
         card: "8px",
