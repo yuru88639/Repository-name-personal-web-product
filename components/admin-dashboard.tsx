@@ -89,7 +89,8 @@ export function AdminDashboard() {
 
     setBusy(true);
     setMessage("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
 
     try {
       await ensureProfile();
@@ -109,7 +110,7 @@ export function AdminDashboard() {
       });
 
       if (error) throw error;
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage("文章已发布。回到首页刷新即可看到。");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "发布文章失败。");
@@ -124,7 +125,8 @@ export function AdminDashboard() {
 
     setBusy(true);
     setMessage("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
 
     try {
       await ensureProfile();
@@ -141,7 +143,7 @@ export function AdminDashboard() {
       });
 
       if (error) throw error;
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage("相册内容已发布。回到首页刷新即可看到。");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "发布相册失败。");
