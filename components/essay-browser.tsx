@@ -93,9 +93,14 @@ export function EssayBrowser({ essays }: EssayBrowserProps) {
           </div>
         ) : (
           visibleEssays.map((essay) => (
-            <article key={essay.id} className="rounded-card bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-xl">
+            <Link
+              aria-label={`Read ${essay.title}`}
+              className="group block rounded-card bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-xl"
+              href={`/essays/${essay.slug}`}
+              key={essay.id}
+            >
               <div
-                className="mb-6 aspect-square rounded-md bg-cover bg-center"
+                className="mb-6 aspect-square rounded-md bg-cover bg-center transition group-hover:opacity-90"
                 style={{
                   backgroundImage: essay.cover_url
                     ? `url(${essay.cover_url})`
@@ -103,17 +108,15 @@ export function EssayBrowser({ essays }: EssayBrowserProps) {
                 }}
               />
               <p className="mb-3 text-xs uppercase tracking-[0.18em] text-amber-800">{essay.category}</p>
-              <h2 className="mb-3 text-xl font-normal leading-tight md:text-2xl">
-                <Link href={`/essays/${essay.slug}`}>{essay.title}</Link>
-              </h2>
+              <h2 className="mb-3 text-xl font-normal leading-tight md:text-2xl">{essay.title}</h2>
               <p className="mb-5 text-sm leading-6 text-neutral-600">{essay.excerpt}</p>
               <p className="text-xs text-muted">
                 {essay.published_at ?? "No date"} / {essay.language}
               </p>
-              <Link className="mt-5 inline-block text-sm font-medium" href={`/essays/${essay.slug}`}>
+              <span className="mt-5 inline-block text-sm font-medium">
                 Read essay →
-              </Link>
-            </article>
+              </span>
+            </Link>
           ))
         )}
       </div>
