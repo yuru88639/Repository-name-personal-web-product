@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 export type Essay = {
   id: string;
@@ -85,14 +86,14 @@ export function EssayBrowser({ essays }: EssayBrowserProps) {
         </div>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-3">
         {visibleEssays.length === 0 ? (
           <div className="rounded-card border border-dashed border-line bg-white p-8 text-sm leading-6 text-muted md:col-span-3">
             没有匹配的已发布文章。请调整筛选条件，或到 Upload 后台发布新内容。
           </div>
         ) : (
           visibleEssays.map((essay) => (
-            <article key={essay.id} className="rounded-card bg-white p-6 shadow-soft">
+            <article key={essay.id} className="rounded-card bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-xl">
               <div
                 className="mb-6 aspect-square rounded-md bg-cover bg-center"
                 style={{
@@ -102,11 +103,16 @@ export function EssayBrowser({ essays }: EssayBrowserProps) {
                 }}
               />
               <p className="mb-3 text-xs uppercase tracking-[0.18em] text-amber-800">{essay.category}</p>
-              <h2 className="mb-3 text-2xl font-normal leading-tight">{essay.title}</h2>
+              <h2 className="mb-3 text-xl font-normal leading-tight md:text-2xl">
+                <Link href={`/essays/${essay.slug}`}>{essay.title}</Link>
+              </h2>
               <p className="mb-5 text-sm leading-6 text-neutral-600">{essay.excerpt}</p>
               <p className="text-xs text-muted">
                 {essay.published_at ?? "No date"} / {essay.language}
               </p>
+              <Link className="mt-5 inline-block text-sm font-medium" href={`/essays/${essay.slug}`}>
+                Read essay →
+              </Link>
             </article>
           ))
         )}
