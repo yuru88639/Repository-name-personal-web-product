@@ -1,6 +1,7 @@
 import { ArchivePanel } from "@/components/archive-panel";
 import { EssayBrowser, type Essay } from "@/components/essay-browser";
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ async function getHomeData() {
       .select("id,title,slug,excerpt,category,language,cover_url,published_at")
       .eq("is_published", true)
       .order("published_at", { ascending: false })
-      .limit(9),
+      .limit(12),
     supabase
       .from("gallery_items")
       .select("id,title,subtitle,quote,image_url,target_url")
@@ -50,25 +51,20 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-canvas text-ink">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-8 lg:grid-cols-[220px_1fr] lg:px-10">
-        <aside className="border-line lg:min-h-[calc(100vh-4rem)] lg:border-r lg:pr-8">
-          <p className="mb-8 text-xs uppercase tracking-[0.22em] text-muted">Collections</p>
-          <nav className="grid gap-4 text-sm text-neutral-700">
-            <a href="#">The Minimalist</a>
-            <a href="#">Bauhaus Archive</a>
-            <a href="#">Design Anthology</a>
-            <a href="#">Resume</a>
-            <a className="rounded-card bg-ink px-4 py-3 text-center text-white" href="/admin">Upload</a>
+      <div className="mx-auto grid max-w-[1480px] gap-8 px-5 py-7 lg:grid-cols-[150px_minmax(0,1fr)] lg:px-8">
+        <aside className="border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
+          <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
+          <nav className="grid gap-5 text-sm text-neutral-800">
+            <Link className="transition hover:text-clay" href="/">Homepage</Link>
+            <a className="transition hover:text-clay" href="#about">About Me</a>
+            <Link className="rounded-card bg-ink px-4 py-3 text-center text-white transition hover:bg-clay" href="/admin">Upload</Link>
           </nav>
         </aside>
 
-        <div>
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_420px]">
-            <EssayBrowser essays={essays} />
-
-            <ArchivePanel captures={galleryItems} />
-          </div>
-        </div>
+        <EssayBrowser
+          essays={essays}
+          rightRail={<ArchivePanel captures={galleryItems} recentLinks={essays.slice(0, 4)} />}
+        />
       </div>
     </main>
   );
