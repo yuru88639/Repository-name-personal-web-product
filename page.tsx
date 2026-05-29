@@ -1,75 +1,46 @@
-import { ArchivePanel } from "@/components/archive-panel";
-import { EssayBrowser, type Essay } from "@/components/essay-browser";
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-type GalleryItem = {
+type RecentLink = {
   id: string;
   title: string;
-  subtitle: string | null;
-  quote: string | null;
-  image_url: string | null;
-  target_url: string | null;
-  country: string | null;
-  location_name: string | null;
-  map_url: string | null;
-  captured_at: string | null;
+  url: string;
+  description: string | null;
+  category: string | null;
+  created_at: string;
 };
 
-async function getHomeData() {
+export default async function LinksPage() {
   const supabase = await createClient();
+  const { data } = await supabase
+    .from("recent_links")
+    .select("id,title,url,description,category,created_at")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
 
-  const [essaysResult, galleryResult] = await Promise.all([
-    supabase
-      .from("essays")
-      .select("id,title,slug,excerpt,category,language,cover_url,published_at")
-      .eq("is_published", true)
-      .order("published_at", { ascending: false })
-      .limit(12),
-    supabase
-      .from("gallery_items")
-      .select("id,title,subtitle,quote,image_url,target_url,country,location_name,map_url,captured_at")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true })
-      .limit(8),
-  ]);
-
-  if (essaysResult.error) {
-    console.error("Failed to load essays:", essaysResult.error.message);
-  }
-
-  if (galleryResult.error) {
-    console.error("Failed to load gallery items:", galleryResult.error.message);
-  }
-
-  return {
-    essays: (essaysResult.data ?? []) as Essay[],
-    galleryItems: (galleryResult.data ?? []) as GalleryItem[],
-  };
-}
-
-export default async function HomePage() {
-  const { essays, galleryItems } = await getHomeData();
+  const links = (data ?? []) as RecentLink[];
 
   return (
-    <main className="min-h-screen bg-canvas text-ink">
-      <div className="mx-auto grid max-w-[1500px] gap-7 px-5 py-7 lg:grid-cols-[120px_minmax(0,1fr)] lg:px-8">
-        <aside className="border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
-          <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
-          <nav className="grid gap-5 text-sm text-neutral-800">
-            <Link className="transition hover:text-clay" href="/">Homepage</Link>
-            <a className="transition hover:text-clay" href="#about">About Me</a>
-            <Link className="rounded-card bg-ink px-4 py-3 text-center text-white transition hover:bg-clay" href="/admin">Upload</Link>
-          </nav>
-        </aside>
-
-        <EssayBrowser
-          essays={essays}
-          rightRail={<ArchivePanel captures={galleryItems} recentLinks={essays.slice(0, 4)} />}
-        />
-      </div>
+    <main className="min-h-screen bg-canvas px-6 py-10 text-ink">
+      <section className="mx-auto max-w-4xl">
+        <a className="mb-10 inline-block text-sm text-muted transition hover:text-clay" href="/">← Back to archive</a>
+        <header className="mb-8 border-b border-line pb-6">
+          <p className="mb-3 text-xs uppercase tracking-[0.24em] text-muted">Collections</p>
+          <h1 className="text-5xl font-normal">Recent Link</h1>
+        </header>
+        <div className="grid gap-4">
+          {links.map((item) => (
+            <a className="rounded-card bg-paper p-5 shadow-soft transition hover:-translate-y-1" href={item.url} key={item.id} rel="noreferrer" target="_blank">
+              <p className="mb-2 text-xs uppercase tracking-[0.18em] text-clay">{item.category ?? "Link"}</p>
+              <h2 className="text-2xl font-normal">{item.title}</h2>
+              {item.description ? <p className="mt-3 text-sm leading-6 text-neutral-600">{item.description}</p> : null}
+              <p className="mt-4 break-all text-xs text-muted">{item.url}</p>
+            </a>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
