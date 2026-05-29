@@ -32,6 +32,7 @@ const fallbackCaptures: Capture[] = [
 
 type ArchivePanelProps = {
   captures: Capture[];
+  recentLinks?: unknown;
 };
 
 export function ArchivePanel({ captures }: ArchivePanelProps) {
@@ -60,14 +61,14 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
   return (
     <aside className="grid gap-5">
       <section className="relative overflow-hidden rounded-card bg-paper shadow-soft">
-        <div className="flex items-center justify-between p-6">
-          <h2 className="text-2xl font-normal">Visual Diary</h2>
-          <div className="flex gap-3">
-            <button className="grid size-10 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showPrevious}>
+        <div className="flex items-center justify-between px-5 py-4">
+          <h2 className="text-xl font-normal">Visual Diary</h2>
+          <div className="flex gap-2">
+            <button className="grid size-9 place-items-center rounded-xl border border-line bg-paper transition hover:border-clay" onClick={showPrevious}>
               <span aria-hidden>‹</span>
               <span className="sr-only">Previous capture</span>
             </button>
-            <button className="grid size-10 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showNext}>
+            <button className="grid size-9 place-items-center rounded-xl border border-line bg-paper transition hover:border-clay" onClick={showNext}>
               <span aria-hidden>›</span>
               <span className="sr-only">Next capture</span>
             </button>
@@ -75,7 +76,7 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
         </div>
 
         <a
-          className="relative flex min-h-[300px] items-end overflow-hidden bg-[#17120e] p-6 text-white"
+          className="relative flex min-h-[250px] items-end overflow-hidden bg-[#17120e] p-5 text-white"
           href={mapHref ?? "#"}
           style={imageStyle}
         >
@@ -88,7 +89,7 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
           ) : null}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
           <div className="relative">
-            <h3 className="mb-3 max-w-72 text-2xl font-normal leading-tight">{capture.title}</h3>
+            <h3 className="mb-2 max-w-72 text-xl font-normal leading-tight">{capture.title}</h3>
             {capture.captured_at ? (
               <p className="text-xs uppercase tracking-[0.18em] text-white/80">{capture.captured_at}</p>
             ) : null}
@@ -101,8 +102,8 @@ export function ArchivePanel({ captures }: ArchivePanelProps) {
           </div>
         </a>
 
-        <div className="flex min-h-16 items-center justify-between gap-5 px-6 py-4">
-          <p className="italic text-neutral-700">{hasQuote ? `“${capture.quote}”` : ""}</p>
+        <div className="flex min-h-12 items-center justify-between gap-4 px-5 py-3">
+          <p className="text-xs italic leading-5 text-neutral-700 [font-family:'Times_New_Roman','MS_Mincho',serif]">{hasQuote ? `“${capture.quote}”` : ""}</p>
           <div className="flex gap-2">
             {items.map((item, index) => (
               <button

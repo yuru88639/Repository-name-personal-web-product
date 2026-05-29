@@ -1,117 +1,59 @@
-import { ArchivePanel } from "@/components/archive-panel";
-import { EssayBrowser, type Essay } from "@/components/essay-browser";
-import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
-type GalleryItem = {
+type AlbumItem = {
   id: string;
   title: string;
-  subtitle: string | null;
-  quote: string | null;
   image_url: string | null;
-  target_url: string | null;
   country: string | null;
   location_name: string | null;
-  map_url: string | null;
   captured_at: string | null;
+  map_url: string | null;
+  target_url: string | null;
 };
 
-type RecentLink = {
-  id: string;
-  title: string;
-  url: string;
-  description: string | null;
-  category: string | null;
-  created_at: string;
-};
-
-async function getHomeData() {
+export default async function AlbumPage() {
   const supabase = await createClient();
+  const { data } = await supabase
+    .from("gallery_items")
+    .select("id,title,image_url,country,location_name,captured_at,map_url,target_url")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
 
-  const [essaysResult, galleryResult, recentLinksResult] = await Promise.all([
-    supabase
-      .from("essays")
-      .select("id,title,slug,excerpt,category,language,cover_url,published_at")
-      .eq("is_published", true)
-      .order("published_at", { ascending: false })
-      .limit(12),
-    supabase
-      .from("gallery_items")
-      .select("id,title,subtitle,quote,image_url,target_url,country,location_name,map_url,captured_at")
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(5),
-    supabase
-      .from("recent_links")
-      .select("id,title,url,description,category,created_at")
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(5),
-  ]);
-
-  if (essaysResult.error) {
-    console.error("Failed to load essays:", essaysResult.error.message);
-  }
-
-  if (galleryResult.error) {
-    console.error("Failed to load gallery items:", galleryResult.error.message);
-  }
-
-  if (recentLinksResult.error) {
-    console.error("Failed to load recent links:", recentLinksResult.error.message);
-  }
-
-  return {
-    essays: (essaysResult.data ?? []) as Essay[],
-    galleryItems: (galleryResult.data ?? []) as GalleryItem[],
-    recentLinks: (recentLinksResult.data ?? []) as RecentLink[],
-  };
-}
-
-export default async function HomePage() {
-  const { essays, galleryItems, recentLinks } = await getHomeData();
+  const items = (data ?? []) as AlbumItem[];
 
   return (
-    <main className="min-h-screen bg-canvas text-ink">
-      <div className="mx-auto grid max-w-[1500px] gap-7 px-5 py-7 lg:grid-cols-[170px_minmax(0,1fr)] lg:px-8">
-        <aside className="flex border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
-          <div className="flex w-full flex-col">
-            <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
-            <nav className="grid gap-5 text-sm text-neutral-800">
-              <Link className="transition hover:text-clay" href="/">Homepage</Link>
-              <Link className="transition hover:text-clay" href="/album">Album</Link>
-              <Link className="transition hover:text-clay" href="/about">About Me</Link>
-            </nav>
-            <section className="mt-10 border-t border-line pt-6">
-              <Link className="mb-4 block text-xs uppercase tracking-[0.24em] text-muted transition hover:text-clay" href="/links">
-                Recent Link
-              </Link>
-              <div className="grid gap-4">
-                {recentLinks.length === 0 ? (
-                  <p className="text-xs leading-5 text-muted">No links yet.</p>
-                ) : (
-                  recentLinks.map((item) => (
-                    <a className="group block" href={item.url} key={item.id} rel="noreferrer" target="_blank">
-                      <p className="line-clamp-2 text-xs leading-5 text-neutral-800 group-hover:text-clay">{item.title}</p>
-                      {item.category ? <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted">{item.category}</p> : null}
-                    </a>
-                  ))
-                )}
-              </div>
-            </section>
-            <Link className="mt-10 rounded-card bg-ink px-4 py-3 text-center text-white transition hover:bg-clay lg:mt-auto" href="/admin">
-              Upload
-            </Link>
-          </div>
-        </aside>
-
-        <EssayBrowser
-          essays={essays}
-          rightRail={<ArchivePanel captures={galleryItems} />}
-        />
-      </div>
+    <main className="min-h-screen bg-canvas px-6 py-10 text-ink">
+      <section className="mx-auto max-w-6xl">
+        <Link className="mb-10 inline-block text-sm text-muted" href="/">← Back to archive</Link>
+        <header className="mb-8 border-b border-line pb-6">
+          <p className="mb-3 text-xs uppercase tracking-[0.24em] text-muted">Collections</p>
+          <h1 className="text-5xl font-normal">Album</h1>
+        </header>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => {
+            const mapHref = item.map_url || item.target_url;
+            const location = [item.country, item.location_name].filter(Boolean).join(" / ");
+            return (
+              <a
+                className="rounded-card bg-paper p-4 shadow-soft transition hover:-translate-y-1"
+                href={mapHref ?? "#"}
+                key={item.id}
+                rel="noreferrer"
+                target={mapHref ? "_blank" : undefined}
+              >
+                <div className="mb-4 flex h-72 items-center justify-center rounded-md bg-[#17120e]">
+                  {item.image_url ? <img alt={item.title} className="max-h-full max-w-full object-contain" src={item.image_url} /> : null}
+                </div>
+                <h2 className="text-xl font-normal">{item.title}</h2>
+                <p className="mt-2 text-sm text-muted">{item.captured_at ?? "No date"} {location ? `/ ${location}` : ""}</p>
+              </a>
+            );
+          })}
+        </div>
+      </section>
     </main>
   );
 }
