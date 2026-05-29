@@ -32,6 +32,7 @@ const fallbackCaptures: Capture[] = [
 
 type ArchivePanelProps = {
   captures: Capture[];
+  recentLinks?: unknown;
 };
 
 export function ArchivePanel({ captures }: ArchivePanelProps) {
