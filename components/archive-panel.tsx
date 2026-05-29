@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 export type Capture = {
   id: string;
@@ -14,19 +13,6 @@ export type Capture = {
   location_name: string | null;
   map_url: string | null;
   captured_at: string | null;
-};
-
-type RecentLink = {
-  id: string;
-  title: string;
-  slug: string;
-  published_at: string | null;
-  category: string;
-};
-
-type ArchivePanelProps = {
-  captures: Capture[];
-  recentLinks: RecentLink[];
 };
 
 const fallbackCaptures: Capture[] = [
@@ -44,7 +30,11 @@ const fallbackCaptures: Capture[] = [
   },
 ];
 
-export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
+type ArchivePanelProps = {
+  captures: Capture[];
+};
+
+export function ArchivePanel({ captures }: ArchivePanelProps) {
   const items = captures.length > 0 ? captures : fallbackCaptures;
   const [active, setActive] = useState(0);
   const capture = items[active] ?? items[0];
@@ -58,7 +48,7 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
   }
 
   const imageStyle = capture.image_url
-    ? { backgroundImage: `linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.58)), url(${capture.image_url})` }
+    ? {}
     : {
         backgroundImage:
           "linear-gradient(135deg, #083344 0%, #64748b 48%, #111827 100%)",
@@ -85,11 +75,19 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         </div>
 
         <a
-          className="flex min-h-[320px] items-end bg-cover bg-center p-6 text-white"
+          className="relative flex min-h-[300px] items-end overflow-hidden bg-[#17120e] p-6 text-white"
           href={mapHref ?? "#"}
           style={imageStyle}
         >
-          <div>
+          {capture.image_url ? (
+            <img
+              alt={capture.title}
+              className="absolute inset-0 h-full w-full object-contain"
+              src={capture.image_url}
+            />
+          ) : null}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <div className="relative">
             <h3 className="mb-3 max-w-72 text-2xl font-normal leading-tight">{capture.title}</h3>
             {capture.captured_at ? (
               <p className="text-xs uppercase tracking-[0.18em] text-white/80">{capture.captured_at}</p>
@@ -116,30 +114,6 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
               </button>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="rounded-card bg-paper p-6 shadow-soft">
-        <div className="mb-5 flex items-center justify-between gap-4">
-          <h2 className="text-xl font-normal">Recent Link</h2>
-          <span className="text-xs uppercase tracking-[0.2em] text-muted">Latest</span>
-        </div>
-        <div className="grid gap-4">
-          {recentLinks.length === 0 ? (
-            <p className="text-sm leading-6 text-muted">No published links yet.</p>
-          ) : (
-            recentLinks.map((item) => (
-              <Link
-                className="border-t border-line pt-4 transition first:border-t-0 first:pt-0 hover:text-clay"
-                href={`/essays/${item.slug}`}
-                key={item.id}
-              >
-                <p className="mb-1 text-xs uppercase tracking-[0.18em] text-clay">{item.category}</p>
-                <h3 className="line-clamp-2 text-sm font-normal leading-5">{item.title}</h3>
-                <p className="mt-2 text-xs text-muted">{item.published_at ?? "No date"}</p>
-              </Link>
-            ))
-          )}
         </div>
       </section>
     </aside>
