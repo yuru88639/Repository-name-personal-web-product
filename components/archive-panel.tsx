@@ -69,14 +69,14 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
   return (
     <aside className="grid gap-5">
       <section className="relative overflow-hidden rounded-card bg-paper shadow-soft">
-        <div className="flex items-center justify-between p-7">
-          <h2 className="text-3xl font-normal">Visual Diary</h2>
+        <div className="flex items-center justify-between p-6">
+          <h2 className="text-2xl font-normal">Visual Diary</h2>
           <div className="flex gap-3">
-            <button className="grid size-11 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showPrevious}>
+            <button className="grid size-10 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showPrevious}>
               <span aria-hidden>‹</span>
               <span className="sr-only">Previous capture</span>
             </button>
-            <button className="grid size-11 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showNext}>
+            <button className="grid size-10 place-items-center rounded-2xl border border-line bg-paper transition hover:border-clay" onClick={showNext}>
               <span aria-hidden>›</span>
               <span className="sr-only">Next capture</span>
             </button>
@@ -84,12 +84,12 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         </div>
 
         <a
-          className="flex min-h-[385px] items-end bg-cover bg-center p-7 text-white"
+          className="flex min-h-[320px] items-end bg-cover bg-center p-6 text-white"
           href={mapHref ?? "#"}
           style={imageStyle}
         >
           <div>
-            <h3 className="mb-3 max-w-72 text-3xl font-normal leading-tight">{capture.title}</h3>
+            <h3 className="mb-3 max-w-72 text-2xl font-normal leading-tight">{capture.title}</h3>
             <p className="text-xs uppercase tracking-[0.18em] text-white/80">
               {capture.captured_at ?? "Date pending"}
             </p>
@@ -102,7 +102,7 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
           </div>
         </a>
 
-        <div className="flex min-h-20 items-center justify-between gap-5 px-8 py-5">
+        <div className="flex min-h-16 items-center justify-between gap-5 px-6 py-4">
           <p className="italic text-neutral-700">&quot;{capture.quote}&quot;</p>
           <div className="flex gap-2">
             {items.map((item, index) => (
