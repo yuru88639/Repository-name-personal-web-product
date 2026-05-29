@@ -12,6 +12,10 @@ type GalleryItem = {
   quote: string | null;
   image_url: string | null;
   target_url: string | null;
+  country: string | null;
+  location_name: string | null;
+  map_url: string | null;
+  captured_at: string | null;
 };
 
 async function getHomeData() {
@@ -26,7 +30,7 @@ async function getHomeData() {
       .limit(12),
     supabase
       .from("gallery_items")
-      .select("id,title,subtitle,quote,image_url,target_url")
+      .select("id,title,subtitle,quote,image_url,target_url,country,location_name,map_url,captured_at")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .limit(8),
@@ -51,7 +55,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-canvas text-ink">
-      <div className="mx-auto grid max-w-[1480px] gap-8 px-5 py-7 lg:grid-cols-[150px_minmax(0,1fr)] lg:px-8">
+      <div className="mx-auto grid max-w-[1500px] gap-7 px-5 py-7 lg:grid-cols-[120px_minmax(0,1fr)] lg:px-8">
         <aside className="border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
           <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
           <nav className="grid gap-5 text-sm text-neutral-800">
