@@ -76,31 +76,35 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-canvas text-ink">
       <div className="mx-auto grid max-w-[1500px] gap-7 px-5 py-7 lg:grid-cols-[170px_minmax(0,1fr)] lg:px-8">
-        <aside className="border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
-          <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
-          <nav className="grid gap-5 text-sm text-neutral-800">
-            <Link className="transition hover:text-clay" href="/">Homepage</Link>
-            <Link className="transition hover:text-clay" href="/album">Album</Link>
-            <a className="transition hover:text-clay" href="#about">About Me</a>
-            <Link className="rounded-card bg-ink px-4 py-3 text-center text-white transition hover:bg-clay" href="/admin">Upload</Link>
-          </nav>
-          <section className="mt-10 border-t border-line pt-6">
-            <Link className="mb-4 block text-xs uppercase tracking-[0.24em] text-muted transition hover:text-clay" href="/links">
-              Recent Link
+        <aside className="flex border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
+          <div className="flex w-full flex-col">
+            <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
+            <nav className="grid gap-5 text-sm text-neutral-800">
+              <Link className="transition hover:text-clay" href="/">Homepage</Link>
+              <Link className="transition hover:text-clay" href="/album">Album</Link>
+              <Link className="transition hover:text-clay" href="/about">About Me</Link>
+            </nav>
+            <section className="mt-10 border-t border-line pt-6">
+              <Link className="mb-4 block text-xs uppercase tracking-[0.24em] text-muted transition hover:text-clay" href="/links">
+                Recent Link
+              </Link>
+              <div className="grid gap-4">
+                {recentLinks.length === 0 ? (
+                  <p className="text-xs leading-5 text-muted">No links yet.</p>
+                ) : (
+                  recentLinks.map((item) => (
+                    <a className="group block" href={item.url} key={item.id} rel="noreferrer" target="_blank">
+                      <p className="line-clamp-2 text-xs leading-5 text-neutral-800 group-hover:text-clay">{item.title}</p>
+                      {item.category ? <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted">{item.category}</p> : null}
+                    </a>
+                  ))
+                )}
+              </div>
+            </section>
+            <Link className="mt-10 rounded-card bg-ink px-4 py-3 text-center text-white transition hover:bg-clay lg:mt-auto" href="/admin">
+              Upload
             </Link>
-            <div className="grid gap-4">
-              {recentLinks.length === 0 ? (
-                <p className="text-xs leading-5 text-muted">No links yet.</p>
-              ) : (
-                recentLinks.map((item) => (
-                  <a className="group block" href={item.url} key={item.id} rel="noreferrer" target="_blank">
-                    <p className="line-clamp-2 text-xs leading-5 text-neutral-800 group-hover:text-clay">{item.title}</p>
-                    {item.category ? <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted">{item.category}</p> : null}
-                  </a>
-                ))
-              )}
-            </div>
-          </section>
+          </div>
         </aside>
 
         <EssayBrowser
