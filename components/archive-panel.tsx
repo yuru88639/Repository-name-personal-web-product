@@ -65,6 +65,7 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
       };
   const locationLabel = [capture.country, capture.location_name || capture.subtitle].filter(Boolean).join(" / ");
   const mapHref = capture.map_url || capture.target_url;
+  const hasQuote = Boolean(capture.quote?.trim());
 
   return (
     <aside className="grid gap-5">
@@ -90,10 +91,10 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         >
           <div>
             <h3 className="mb-3 max-w-72 text-2xl font-normal leading-tight">{capture.title}</h3>
-            <p className="text-xs uppercase tracking-[0.18em] text-white/80">
-              {capture.captured_at ?? "Date pending"}
-            </p>
-            <p className="mt-2 text-sm text-white/85">{locationLabel || "Location pending"}</p>
+            {capture.captured_at ? (
+              <p className="text-xs uppercase tracking-[0.18em] text-white/80">{capture.captured_at}</p>
+            ) : null}
+            {locationLabel ? <p className="mt-2 text-sm text-white/85">{locationLabel}</p> : null}
             {mapHref ? (
               <span className="mt-4 inline-block rounded-full border border-white/35 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85">
                 Open map
@@ -103,7 +104,7 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         </a>
 
         <div className="flex min-h-16 items-center justify-between gap-5 px-6 py-4">
-          <p className="italic text-neutral-700">&quot;{capture.quote}&quot;</p>
+          <p className="italic text-neutral-700">{hasQuote ? `“${capture.quote}”` : ""}</p>
           <div className="flex gap-2">
             {items.map((item, index) => (
               <button

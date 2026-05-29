@@ -43,10 +43,10 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
   return (
     <section>
       <header className="mb-5 border-b border-line pb-4">
-        <div className="grid gap-3 xl:grid-cols-[340px_minmax(360px,1fr)_250px] xl:items-center">
+        <div className="grid gap-4 xl:grid-cols-[460px_minmax(420px,1fr)_360px] xl:items-center">
           <div className="flex min-w-0 items-baseline gap-4 whitespace-nowrap">
             <p className="shrink-0 text-xs uppercase tracking-[0.22em] text-muted">AURA & INK</p>
-            <h1 className="text-3xl font-normal tracking-normal md:text-[34px]">Personal Archive</h1>
+            <h1 className="text-3xl font-normal tracking-normal md:text-[32px]">Personal Archive</h1>
           </div>
           <input
             className="h-12 w-full rounded-2xl border border-transparent bg-paper px-6 text-sm shadow-soft outline-none transition focus:border-clay"
@@ -54,9 +54,9 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
             placeholder="Search essays and captures..."
             value={query}
           />
-          <div className="flex flex-wrap justify-start gap-2 text-[11px] xl:justify-end">
+          <div className="flex flex-nowrap justify-start gap-2 text-[11px] xl:justify-end">
             <select
-              className="h-8 max-w-24 rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
+              className="h-8 w-[105px] rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
               onChange={(event) => setCategory(event.target.value)}
               value={category}
             >
@@ -67,13 +67,13 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
               <option value="日记">日记</option>
             </select>
             <input
-              className="h-8 max-w-28 rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
+              className="h-8 w-[132px] rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
               onChange={(event) => setDate(event.target.value)}
               type="date"
               value={date}
             />
             <select
-              className="h-8 max-w-24 rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
+              className="h-8 w-[105px] rounded-card border border-line bg-paper px-2 outline-none transition focus:border-clay"
               onChange={(event) => setLanguage(event.target.value)}
               value={language}
             >
