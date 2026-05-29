@@ -89,7 +89,8 @@ export function AdminDashboard() {
 
     setBusy(true);
     setMessage("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
 
     try {
       await ensureProfile();
@@ -109,7 +110,7 @@ export function AdminDashboard() {
       });
 
       if (error) throw error;
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage("文章已发布。回到首页刷新即可看到。");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "发布文章失败。");
@@ -124,7 +125,8 @@ export function AdminDashboard() {
 
     setBusy(true);
     setMessage("");
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
 
     try {
       await ensureProfile();
@@ -133,15 +135,19 @@ export function AdminDashboard() {
         owner_id: user.id,
         title: String(form.get("title") ?? ""),
         subtitle: String(form.get("subtitle") ?? ""),
+        country: String(form.get("country") ?? ""),
+        location_name: String(form.get("location_name") ?? ""),
+        captured_at: String(form.get("captured_at") ?? ""),
         quote: String(form.get("quote") ?? ""),
         image_url: imageUrl,
-        target_url: String(form.get("target_url") ?? "#"),
+        target_url: String(form.get("map_url") ?? "#"),
+        map_url: String(form.get("map_url") ?? ""),
         sort_order: Number(form.get("sort_order") || 100),
         is_active: true,
       });
 
       if (error) throw error;
-      event.currentTarget.reset();
+      formElement.reset();
       setMessage("相册内容已发布。回到首页刷新即可看到。");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "发布相册失败。");
@@ -222,9 +228,14 @@ export function AdminDashboard() {
           <form className="grid gap-4 rounded-card bg-white p-6 shadow-soft" onSubmit={publishGalleryItem}>
             <h2 className="text-2xl font-normal">发布相册</h2>
             <input className="h-11 rounded-card border border-line px-4 outline-none" name="title" placeholder="标题" required />
-            <input className="h-11 rounded-card border border-line px-4 outline-none" name="subtitle" placeholder="地点/时间" />
+            <div className="grid gap-3 md:grid-cols-2">
+              <input className="h-11 rounded-card border border-line px-4 outline-none" name="country" placeholder="国家，例如 Japan" />
+              <input className="h-11 rounded-card border border-line px-4 outline-none" name="location_name" placeholder="地点，例如 Tokyo" />
+            </div>
+            <input className="h-11 rounded-card border border-line px-4 outline-none" name="captured_at" type="date" />
+            <input className="h-11 rounded-card border border-line px-4 outline-none" name="subtitle" placeholder="补充地点/时间，可留空" />
             <input className="h-11 rounded-card border border-line px-4 outline-none" name="quote" placeholder="短句" />
-            <input className="h-11 rounded-card border border-line px-4 outline-none" name="target_url" placeholder="跳转链接，可留空" />
+            <input className="h-11 rounded-card border border-line px-4 outline-none" name="map_url" placeholder="Google Maps 链接，可留空" />
             <input className="h-11 rounded-card border border-line px-4 outline-none" name="sort_order" placeholder="排序，例如 10" type="number" />
             <label className="grid gap-2 text-sm text-muted">
               相册图片

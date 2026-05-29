@@ -42,11 +42,11 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
 
   return (
     <section>
-      <header className="mb-9 border-b border-line pb-8">
-        <div className="mb-7 grid gap-5 xl:grid-cols-[220px_minmax(280px,560px)_auto] xl:items-center">
-          <div>
-            <p className="mb-2 text-xs uppercase tracking-[0.22em] text-muted">Aura & Ink</p>
-            <h1 className="text-4xl font-normal tracking-normal md:text-6xl">Personal Archive</h1>
+      <header className="mb-7 border-b border-line pb-6">
+        <div className="mb-5 grid gap-4 xl:grid-cols-[360px_minmax(360px,1fr)] xl:items-center">
+          <div className="flex min-w-0 items-baseline gap-4 whitespace-nowrap">
+            <p className="shrink-0 text-xs uppercase tracking-[0.22em] text-muted">Aura & Ink</p>
+            <h1 className="text-3xl font-normal tracking-normal md:text-4xl">Personal Archive</h1>
           </div>
           <input
             className="h-12 w-full rounded-2xl border border-transparent bg-paper px-6 text-sm shadow-soft outline-none transition focus:border-clay"
@@ -54,14 +54,11 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
             placeholder="Search essays and captures..."
             value={query}
           />
-          <div className="hidden justify-self-end rounded-full border border-line bg-paper px-5 py-3 text-sm text-muted xl:block">
-            Warm notes, moving images, daily fragments
-          </div>
         </div>
 
-        <div className="flex flex-wrap justify-start gap-3 text-sm xl:justify-end">
+        <div className="flex flex-wrap justify-start gap-2 text-xs xl:justify-end">
           <select
-            className="h-11 rounded-card border border-line bg-paper px-4 outline-none transition focus:border-clay"
+            className="h-9 rounded-card border border-line bg-paper px-3 outline-none transition focus:border-clay"
             onChange={(event) => setCategory(event.target.value)}
             value={category}
           >
@@ -72,13 +69,13 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
             <option value="日记">日记</option>
           </select>
           <input
-            className="h-11 rounded-card border border-line bg-paper px-4 outline-none transition focus:border-clay"
+            className="h-9 rounded-card border border-line bg-paper px-3 outline-none transition focus:border-clay"
             onChange={(event) => setDate(event.target.value)}
             type="date"
             value={date}
           />
           <select
-            className="h-11 rounded-card border border-line bg-paper px-4 outline-none transition focus:border-clay"
+            className="h-9 rounded-card border border-line bg-paper px-3 outline-none transition focus:border-clay"
             onChange={(event) => setLanguage(event.target.value)}
             value={language}
           >
@@ -101,12 +98,12 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
             visibleEssays.map((essay) => (
               <Link
                 aria-label={`Read ${essay.title}`}
-                className="group grid min-h-[300px] rounded-card border border-transparent bg-paper p-5 shadow-soft transition hover:-translate-y-1 hover:border-line hover:shadow-xl"
+                className="group grid min-h-[260px] rounded-card border border-transparent bg-paper p-4 shadow-soft transition hover:-translate-y-1 hover:border-line hover:shadow-xl"
                 href={`/essays/${essay.slug}`}
                 key={essay.id}
               >
                 <div
-                  className="mb-5 h-36 rounded-md bg-[#f6eee2] bg-center bg-no-repeat transition group-hover:opacity-90"
+                  className="mb-4 h-28 rounded-md bg-[#f6eee2] bg-center bg-no-repeat transition group-hover:opacity-90"
                   style={{
                     backgroundImage: essay.cover_url
                       ? `url(${essay.cover_url})`
@@ -114,9 +111,9 @@ export function EssayBrowser({ essays, rightRail }: EssayBrowserProps) {
                     backgroundSize: essay.cover_url ? "contain" : "cover",
                   }}
                 />
-                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-clay">{essay.category}</p>
-                <h2 className="mb-3 line-clamp-3 text-xl font-normal leading-tight">{essay.title}</h2>
-                <p className="mb-5 line-clamp-2 text-sm leading-6 text-neutral-600">{essay.excerpt}</p>
+                <p className="mb-2 text-[11px] uppercase tracking-[0.18em] text-clay">{essay.category}</p>
+                <h2 className="mb-2 line-clamp-3 text-lg font-normal leading-tight">{essay.title}</h2>
+                <p className="mb-4 line-clamp-2 text-sm leading-6 text-neutral-600">{essay.excerpt}</p>
                 <div className="mt-auto flex items-center justify-between gap-4 text-xs text-muted">
                   <span>{essay.published_at ?? "No date"} / {essay.language}</span>
                   <span className="font-medium text-ink">Read →</span>

@@ -10,6 +10,10 @@ export type Capture = {
   quote: string | null;
   image_url: string | null;
   target_url: string | null;
+  country: string | null;
+  location_name: string | null;
+  map_url: string | null;
+  captured_at: string | null;
 };
 
 type RecentLink = {
@@ -33,6 +37,10 @@ const fallbackCaptures: Capture[] = [
     quote: "Upload a gallery item in Supabase to replace this card.",
     image_url: null,
     target_url: null,
+    country: null,
+    location_name: null,
+    map_url: null,
+    captured_at: null,
   },
 ];
 
@@ -55,6 +63,8 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         backgroundImage:
           "linear-gradient(135deg, #083344 0%, #64748b 48%, #111827 100%)",
       };
+  const locationLabel = [capture.country, capture.location_name || capture.subtitle].filter(Boolean).join(" / ");
+  const mapHref = capture.map_url || capture.target_url;
 
   return (
     <aside className="grid gap-5">
@@ -74,14 +84,17 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         </div>
 
         <a
-          className="flex min-h-[390px] items-end bg-cover bg-center p-8 text-white"
-          href={capture.target_url ?? "#"}
+          className="flex min-h-[330px] items-end bg-cover bg-center p-7 text-white"
+          href={mapHref ?? "#"}
           style={imageStyle}
         >
           <div>
             <h3 className="mb-3 max-w-72 text-3xl font-normal leading-tight">{capture.title}</h3>
-            <p className="text-sm text-white/80">{capture.subtitle ?? "Location pending"}</p>
-            {capture.target_url ? (
+            <p className="text-xs uppercase tracking-[0.18em] text-white/80">
+              {capture.captured_at ?? "Date pending"}
+            </p>
+            <p className="mt-2 text-sm text-white/85">{locationLabel || "Location pending"}</p>
+            {mapHref ? (
               <span className="mt-4 inline-block rounded-full border border-white/35 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85">
                 Open map
               </span>

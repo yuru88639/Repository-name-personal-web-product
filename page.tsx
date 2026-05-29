@@ -12,6 +12,10 @@ type GalleryItem = {
   quote: string | null;
   image_url: string | null;
   target_url: string | null;
+  country: string | null;
+  location_name: string | null;
+  map_url: string | null;
+  captured_at: string | null;
 };
 
 async function getHomeData() {
@@ -26,7 +30,7 @@ async function getHomeData() {
       .limit(12),
     supabase
       .from("gallery_items")
-      .select("id,title,subtitle,quote,image_url,target_url")
+      .select("id,title,subtitle,quote,image_url,target_url,country,location_name,map_url,captured_at")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .limit(8),
