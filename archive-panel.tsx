@@ -84,7 +84,7 @@ export function ArchivePanel({ captures, recentLinks }: ArchivePanelProps) {
         </div>
 
         <a
-          className="flex min-h-[330px] items-end bg-cover bg-center p-7 text-white"
+          className="flex min-h-[385px] items-end bg-cover bg-center p-7 text-white"
           href={mapHref ?? "#"}
           style={imageStyle}
         >

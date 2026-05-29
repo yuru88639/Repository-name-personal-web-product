@@ -55,7 +55,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-canvas text-ink">
-      <div className="mx-auto grid max-w-[1480px] gap-8 px-5 py-7 lg:grid-cols-[150px_minmax(0,1fr)] lg:px-8">
+      <div className="mx-auto grid max-w-[1500px] gap-7 px-5 py-7 lg:grid-cols-[120px_minmax(0,1fr)] lg:px-8">
         <aside className="border-line lg:min-h-[calc(100vh-3.5rem)] lg:border-r lg:pr-7">
           <p className="mb-9 text-xs uppercase tracking-[0.32em] text-muted">COLLECTIONS</p>
           <nav className="grid gap-5 text-sm text-neutral-800">
